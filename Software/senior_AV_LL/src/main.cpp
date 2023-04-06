@@ -13,7 +13,7 @@ ros::NodeHandle  nh;
 
 SoftwareSerial serial(10, 11);     //serial (rx, tx)
 RoboClaw roboclaw(&serial, 10000); //10000
-
+//==========================================================================Global================================================================================
 void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg);
 void forward_backward(int val);
 void right_left(int turn);
@@ -27,7 +27,7 @@ ros::Subscriber<geometry_msgs::Twist> AV_vel_sub("cmd_vel_AV", &AV_vel_cb);
 
 std_msgs::UInt32 enc;
 ros::Publisher enc_pub("av_encoder", &enc);
-
+//==========================================================================Steup and Loop================================================================================
 void setup()
 {
   roboclaw.begin(115200);
@@ -54,7 +54,7 @@ void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg)  //callback function from
 
   forward_backward(drive_duty_cycle);
   right_left(corner);
-}
+}//end fo AV_vel_cb
 
 uint32_t avg_encoder_val(int addy, int addy_2)
 {
@@ -64,7 +64,7 @@ uint32_t avg_encoder_val(int addy, int addy_2)
   uint32_t encoder2_M2 = roboclaw.ReadEncM2(addy_2);
 
   return (encoder1_M1 + encoder2_M1 + encoder1_M2 + encoder2_M2) / 4;
-}
+}//end of avg_encoder_val
 
 void forward_backward(int drive)
 {
@@ -82,7 +82,7 @@ void forward_backward(int drive)
     roboclaw.BackwardM1(address2, drive * -1);
     roboclaw.BackwardM2(address2, drive * -1);
   }
-}
+}//end of forward_backward
 
 void right_left(int turn)
 {
@@ -105,7 +105,7 @@ void right_left(int turn)
     roboclaw.SpeedAccelDeccelPositionM1(address3, corner_accel, 1000, corner_accel, 777, 1);  //Middle_Corner
     roboclaw.SpeedAccelDeccelPositionM2(address3, corner_accel, 1000, corner_accel, 750, 1);
   }
-}
+}//end of right_left
 
 void motor_stop(void)
 {
@@ -114,4 +114,4 @@ void motor_stop(void)
   {
     roboclaw.ForwardM1(rc[i], 0);
   }
-}
+}//end of motor_stop
