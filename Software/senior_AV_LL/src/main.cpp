@@ -1,6 +1,7 @@
 #include <ros.h>
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/UInt32.h>
+#include <std_msgs/UInt8.h>
 #include <SoftwareSerial.h>
 #include "RoboClaw.h"
 #include <math.h>
@@ -8,6 +9,9 @@
 #define address1 0x80
 #define address2 0x81
 #define address3 0x82     //corner_motor
+
+#define ppr_motor 537.7
+#define wheel_circumference 2*PI*0.076
 
 ros::NodeHandle  nh;
 
@@ -19,14 +23,17 @@ void forward_backward(int val);
 void right_left(int turn);
 void motor_stop(void);
 uint32_t avg_encoder_val(int addy, int addy_2);
+uint8_t meter_per_sec(int qpps);
 
-int drive_duty_cycle = 0;
-int av_encoder = avg_encoder_val(address1, address2);
+int g_av_encoder = avg_encoder_val(address1, address2);
 
 ros::Subscriber<geometry_msgs::Twist> AV_vel_sub("cmd_vel_AV", &AV_vel_cb);
 
 std_msgs::UInt32 enc;
-ros::Publisher enc_pub("av_encoder", &enc);
+ros::Publisher enc_pub("encoder_wheel", &enc);
+
+std_msgs::UInt8 speed;
+ros::Publisher speed_pub("speed_av", &speed);
 //==========================================================================Steup and Loop================================================================================
 void setup()
 {
@@ -34,22 +41,25 @@ void setup()
 
   nh.initNode();
   nh.advertise(enc_pub);
+  nh.advertise(speed_pub);
   nh.subscribe(AV_vel_sub);
-  
   motor_stop();
 }
 
 void loop()
 {
-  enc.data = av_encoder;
+  enc.data = g_av_encoder;
   enc_pub.publish( &enc);
+
+  speed.data = meter_per_sec(g_av_encoder);
+  speed_pub.publish( &speed);
   nh.spinOnce();
 //  delay(1);
 }
 //==========================================================================Functions================================================================================
 void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg)  //callback function from subscribe
 {
-  drive_duty_cycle = AV_vel_msg.linear.x;           //val: -63 <-> 63
+  int drive_duty_cycle = AV_vel_msg.linear.x;           //val: -63 <-> 63
   int corner = AV_vel_msg.angular.z + 780;
 
   forward_backward(drive_duty_cycle);
@@ -65,6 +75,11 @@ uint32_t avg_encoder_val(int addy, int addy_2)
 
   return (encoder1_M1 + encoder2_M1 + encoder1_M2 + encoder2_M2) / 4;
 }//end of avg_encoder_val
+
+uint8_t meter_per_sec(int qpps)
+{
+  return wheel_circumference * (1/ppr_motor) * qpps;
+}
 
 void forward_backward(int drive)
 {
