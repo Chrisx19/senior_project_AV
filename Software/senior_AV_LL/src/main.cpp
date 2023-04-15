@@ -12,14 +12,20 @@
 
 #define accel 1000
 
+const int trig1 = 12;
+const int echo1 = 13;
+int16_t drive_duty_cycle = 0;
+int center_sensor = 0;
+
 ros::NodeHandle  nh;
 
-SoftwareSerial serial(10, 11);     //serial (rx, tx)
+SoftwareSerial serial(10, 11);     //serial (rx, tx) can use pin 6 for tx
 RoboClaw roboclaw(&serial, 10000); //10000
 //==========================================================================Global================================================================================
 void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg);
-void right_left(int turn);
+void corner_drive(int turn, int drive);
 void motor_stop(void);
+int sensor1(int delay_sonar);
 
 ros::Subscriber<geometry_msgs::Twist> AV_vel_sub("cmd_vel_AV", &AV_vel_cb);
 
@@ -34,6 +40,9 @@ void setup()
   nh.initNode();
   // nh.advertise(speed_pub);
   nh.subscribe(AV_vel_sub);
+
+  pinMode(trig1, OUTPUT);
+  pinMode(echo1, INPUT);
   // motor_stop();
 }
 
@@ -42,44 +51,75 @@ void loop()
   // int g_m_s = 0;
   // speed.data = g_m_s;
   // speed_pub.publish( &speed);
+
   nh.spinOnce();
   // delay(1);
 }
 //==========================================================================Functions================================================================================
+int sensor1(int delay_sonar)
+{
+  digitalWrite(trig1, LOW);
+  delayMicroseconds(delay_sonar);
+  digitalWrite(trig1, HIGH);
+  delayMicroseconds(delay_sonar);
+  digitalWrite(trig1, LOW);
+
+  long time = pulseIn (echo1, HIGH);
+  int cm_distance = (time / 29.1 / 2);
+  return cm_distance;
+}
+
 void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg)  //callback function from subscribe
 {
-  int drive_duty_cycle = AV_vel_msg.linear.x;           //val: -2800 <-> 2800
-  int corner = AV_vel_msg.angular.z + 780;
+  drive_duty_cycle = AV_vel_msg.linear.x;           //val: -2800 <-> 2800
+  int corner = AV_vel_msg.angular.z + 780;          //middle: 780
 
-  roboclaw.SpeedAccelM1M2(address1, accel, drive_duty_cycle, drive_duty_cycle);
-  roboclaw.SpeedAccelM1M2(address2, accel, drive_duty_cycle, drive_duty_cycle);
-  right_left(corner);
+  uint16_t const deccel = 2800;
+  center_sensor = sensor1(100);
+
+  if(70 >= center_sensor) 
+  { 
+      roboclaw.SpeedAccelM1M2(address1, deccel, -400, -400);
+      roboclaw.SpeedAccelM1M2(address2, deccel, -400, -400);
+  }
+  else
+  {
+    corner_drive(corner, drive_duty_cycle);
+  }
+
 }//end fo AV_vel_cb
 
-void right_left(int turn)
+void corner_drive(int turn, int drive)
 {
   float accel_rate = 1.5;
   float accel_max = pow(2,15)-1;
   int corner_accel = accel_max * accel_rate;
 
-  // int corner_accel = 1000;
-
   if (turn < 780)
   {
     roboclaw.SpeedAccelDeccelPositionM1(address3, corner_accel, 1000, corner_accel, turn, 1);    //Right_Corner    //  roboclaw.SpeedAccelDeccelPositionM1(address3,26213,1000,26213,6,1);    //Right_Turn
     roboclaw.SpeedAccelDeccelPositionM2(address3, corner_accel, 1000, corner_accel, turn, 1);                      //  roboclaw.SpeedAccelDeccelPositionM2(address3,26213,1000,26213,7,1);
+    
+    roboclaw.SpeedAccelM1M2(address1, accel, drive * 1/2, drive * 1/2);
+    roboclaw.SpeedAccelM1M2(address2, accel, drive, drive);
+  
   }
   else if (turn > 780)
   {
     roboclaw.SpeedAccelDeccelPositionM1(address3, corner_accel, 1000, corner_accel, turn, 1);   //Left_Corner       //  roboclaw.SpeedAccelDeccelPositionM1(address3,26213,1000,26213,1559,1);    //Left_Turn 
     roboclaw.SpeedAccelDeccelPositionM2(address3, corner_accel, 1000, corner_accel, turn, 1);                       //  roboclaw.SpeedAccelDeccelPositionM2(address3,26213,1000,26213,1564,1);
+  
+    roboclaw.SpeedAccelM1M2(address1, accel, drive, drive);
+    roboclaw.SpeedAccelM1M2(address2, accel, drive * 1/2, drive * 1/2);
   }
   else
   {
     roboclaw.SpeedAccelDeccelPositionM1(address3, corner_accel, 1000, corner_accel, 777, 1);  //Middle_Corner
     roboclaw.SpeedAccelDeccelPositionM2(address3, corner_accel, 1000, corner_accel, 750, 1);
+    roboclaw.SpeedAccelM1M2(address1, accel, drive, drive);
+    roboclaw.SpeedAccelM1M2(address2, accel, drive, drive);
   }
-}//end of right_left
+}//end of corner_drive
 
 void motor_stop(void)
 {
