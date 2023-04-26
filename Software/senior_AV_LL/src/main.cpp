@@ -2,6 +2,7 @@
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/Int32.h>
 #include <std_msgs/Float32.h>
+#include <av_senior/Arduino_telemetry.h>
 #include <SoftwareSerial.h>
 #include "RoboClaw.h"
 #include <math.h>
@@ -15,7 +16,7 @@
 const int trig1 = 12;
 const int echo1 = 13;
 int16_t drive_duty_cycle = 0;
-int center_sensor = 0;
+float center_sensor = 0;
 
 ros::NodeHandle  nh;
 
@@ -29,8 +30,8 @@ int sensor1(int delay_sonar);
 
 ros::Subscriber<geometry_msgs::Twist> AV_vel_sub("cmd_vel_AV", &AV_vel_cb);
 
-// std_msgs::Float32 speed;
-// ros::Publisher speed_pub("speed_av", &speed);
+av_senior::Arduino_telemetry distance_data;
+ros::Publisher distance_pub("distance_ll", &distance_data);
 //==========================================================================Setup and Loop================================================================================
 void setup()
 {
@@ -38,7 +39,7 @@ void setup()
   // nh.getHardware()->setBaud(115200);
 
   nh.initNode();
-  // nh.advertise(speed_pub);
+  nh.advertise(distance_pub);
   nh.subscribe(AV_vel_sub);
 
   pinMode(trig1, OUTPUT);
@@ -48,9 +49,13 @@ void setup()
 
 void loop()
 {
-  // int g_m_s = 0;
-  // speed.data = g_m_s;
-  // speed_pub.publish( &speed);
+  center_sensor = sensor1(100);
+  distance_data.Right_Distance = center_sensor;
+  distance_data.Mid_Distance = 1000;
+  distance_data.Left_Distance = 2000;
+
+
+  distance_pub.publish( &distance_data);
 
   nh.spinOnce();
   // delay(1);
@@ -75,9 +80,8 @@ void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg)  //callback function from
   int corner = AV_vel_msg.angular.z + 780;          //middle: 780
 
   uint16_t const deccel = 2800;
-  center_sensor = sensor1(100);
 
-  if(70 >= center_sensor) 
+  if(35 >= center_sensor) 
   { 
       roboclaw.SpeedAccelM1M2(address1, deccel, -400, -400);
       roboclaw.SpeedAccelM1M2(address2, deccel, -400, -400);
