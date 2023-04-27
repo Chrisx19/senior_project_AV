@@ -20,7 +20,7 @@ class Vechicle(object):
         self.cmd_pub = rospy.Publisher("/cmd_vel_AV", Twist, queue_size = 10)
         self.speed_pub = rospy.Publisher("/speed_av", Float32, queue_size = 10)
         self.joy_sub = rospy.Subscriber("/joy", Joy, self.joy_cb, queue_size = 10)
-        self.distance_sub = rospy.Subscriber("/distance_ll", Arduino_telemetry, self.distance_cb, queue_size = 10)
+        self.distance_sub = rospy.Subscriber("/distance_ll", Arduino_telemetry, self.distance_cb, queue_size = 100, buff_size= 8192, tcp_nodelay=False)
 
     def distance_cb(self, distance_msg):
         right_sensor = distance_msg.Right_Distance
@@ -32,10 +32,10 @@ class Vechicle(object):
         else:
             self.drive = 0
 
-        self.vel.linear.x = self.drive  # 1000 #forward or back if its negative
-        self.vel.angular.z = self.corner #  500 right(positive val until 500)    left is vice versa 
+        # self.vel.linear.x = self.drive  # 1000 #forward or back if its negative
+        # self.vel.angular.z = self.corner #  500 right(positive val until 500)    left is vice versa 
 
-        self.cmd_pub.publish(self.vel)
+        # self.cmd_pub.publish(self.vel)
         
     def joy_cb(self, joy_msg):
         speed_pulse  = joy_msg.axes[3] * self.quad_pps
