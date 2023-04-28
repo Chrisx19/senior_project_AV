@@ -8,11 +8,15 @@ project(av_senior)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+<<<<<<< HEAD
   rospy
   std_msgs
   sensor_msgs
   geometry_msgs
   message_generation
+=======
+  joy
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 )
 
 ## System dependencies are found with CMake's conventions
@@ -48,12 +52,21 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
+<<<<<<< HEAD
 # Generate messages in the 'msg' folder
 add_message_files(
   FILES
   Arduino_telemetry.msg
   # Message2.msg
 )
+=======
+## Generate messages in the 'msg' folder
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -69,6 +82,7 @@ add_message_files(
 #   Action2.action
 # )
 
+<<<<<<< HEAD
 # Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
@@ -76,6 +90,13 @@ generate_messages(
   sensor_msgs
   geometry_msgs
 )
+=======
+## Generate added messages and services with any dependencies listed here
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs  # Or other packages containing msgs
+# )
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -108,8 +129,13 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
+<<<<<<< HEAD
 #  LIBRARIES arm_package
  CATKIN_DEPENDS rospy std_msgs sensor_msgs geometry_msgs
+=======
+#  LIBRARIES av_senior
+#  CATKIN_DEPENDS joy
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 #  DEPENDS system_lib
 )
 
@@ -126,7 +152,11 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
+<<<<<<< HEAD
 #   src/${PROJECT_NAME}/arm_package.cpp
+=======
+#   src/${PROJECT_NAME}/av_senior.cpp
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 # )
 
 ## Add cmake target dependencies of the library
@@ -137,7 +167,11 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+<<<<<<< HEAD
 # add_executable(${PROJECT_NAME}_node src/arm_package_node.cpp)
+=======
+# add_executable(${PROJECT_NAME}_node src/av_senior_node.cpp)
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -161,6 +195,7 @@ include_directories(
 # all install targets should use catkin DESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
+<<<<<<< HEAD
 # Mark executable scripts (Python etc.) for installation
 # in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
@@ -168,6 +203,15 @@ catkin_install_python(PROGRAMS
   scripts/joy_av.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+=======
+## Mark executable scripts (Python etc.) for installation
+## in contrast to setup.py, you can choose the destination
+ catkin_install_python(PROGRAMS
+   scripts/joy_av.py
+   scripts/auto.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
@@ -202,10 +246,18 @@ catkin_install_python(PROGRAMS
 #############
 
 ## Add gtest based cpp test target and link libraries
+<<<<<<< HEAD
 # catkin_add_gtest(${PROJECT_NAME}-test test/test_arm_package.cpp)
+=======
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_av_senior.cpp)
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
+<<<<<<< HEAD
 # catkin_add_nosetests(test)
+=======
+# catkin_add_nosetests(test)
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff

@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
 import rospy
 import time
+<<<<<<< HEAD
 from math import pi,radians, sin, cos, atan2, sqrt
+=======
+from math import atan2, sqrt, pow, pi, sin, cos
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
 from std_msgs.msg import Float32
 from sensor_msgs.msg import NavSatFix
 from geometry_msgs.msg import Twist
 
 class Rpi(object):
     def __init__(self):
+<<<<<<< HEAD
         self.wheel_diameter = 0.135
 
+=======
+
+        self.velocity = 0.4
+
+        self.current_lat = 0
+        self.current_long = 0
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
         self.goal_lat = 34.0574836
         self.goal_long = -117.8221183
 
@@ -19,6 +31,7 @@ class Rpi(object):
 
 
     def gps_cb(self, gps_msg):
+<<<<<<< HEAD
         current_lat = gps_msg.latitude
         current_long = gps_msg.longitude
 
@@ -54,6 +67,28 @@ class Rpi(object):
         meter_per_sec = wheel_circumference * (1 / ppr_motor) * qpps
 
         return meter_per_sec
+=======
+        self.current_lat = gps_msg.latitude
+        self.current_long = gps_msg.longitude
+        
+        R = 6378.137
+        dLat = self.goal_lat * pi / 180 - self.current_lat * pi / 180
+        dLong = self.goal_long * pi / 180 - self.current_long * pi / 180
+        a = sin(dLat / 2) * sin(dLat / 2) + cos(self.current_lat * pi /180) * cos(self.goal_lat * pi / 180) * sin(dLong / 2) * sin(dLong / 2)
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        distance = (R * c) * 1000 # in meters conversion
+
+        # distance = sqrt( pow(self.goal_lat - self.current_lat, 2) + pow(self.goal_long - self.current_long, 2))
+
+        goal_time = distance / self.velocity
+
+        print(distance)
+        
+        print(goal_time)
+        print('')
+        print('')
+
+>>>>>>> 1ece3bd2fa72e01d24d2201eb7f579aea1bcd7ff
         # vel = Twist()
 
         # start_time = time.time()
