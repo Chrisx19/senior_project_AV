@@ -175,6 +175,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/auto.py
   scripts/joy_av.py
+  scripts/object_detect.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -1,5 +1,6 @@
 <launch>
   <node name = "av_node" pkg = "av_senior" type = "joy_av.py" />
+  <node name = "object_detection_node" pkg = "av_senior" type = "object_detect.py" />
 
   <arg name="joy_config" default="ps3" />
   <arg name="joy_dev" default="/dev/input/js0" />
@@ -18,10 +19,10 @@
     <remap from="joy" to="$(arg joy_topic)" />
   </node> -->
 
-  <node name="atmega2560_node"        pkg="rosserial_python"      type="serial_node.py" output = "screen">
+  <!-- <node name="atmega2560_node"        pkg="rosserial_python"      type="serial_node.py" output = "screen">
     <param name="port"              type="string"               value="/dev/ttyACM0"/>
-    <param name="baud"              type="int"                  value="57600"/>
-  </node>
+    <param name="baud"              type="int"                  value="38400"/>
+  </node> -->
 
   
 

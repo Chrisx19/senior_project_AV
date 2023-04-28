@@ -1,5 +1,3 @@
-Header header
-
-float32 Right_Distance
-float32 Mid_Distance
-float32 Left_Distance
+int16 Right_Distance
+int16 Mid_Distance
+int16 Left_Distance
