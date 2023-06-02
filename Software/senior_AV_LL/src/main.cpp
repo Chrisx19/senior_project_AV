@@ -20,11 +20,12 @@ const int echo1 = 13;
 const int analog_in_right = A0;
 const int analog_in_left = A1;
 
-int16_t drive_duty_cycle = 0;
-int16_t corner = 0;
-int16_t turn = 0;
+int16_t g_drive_duty_cycle = 0;
+int16_t g_corner = 0;
+int16_t g_turn= 0;
 
 bool manual_controller = true;
+bool en = false;
 
 int right_sensor, middle_sensor, left_sensor;
 
@@ -57,7 +58,7 @@ void setup()
   pinMode(echo1, INPUT);
 
   nh.initNode();
-  nh.advertise(distance_pub);
+  // nh.advertise(distance_pub);
   nh.subscribe(AV_vel_sub);
   nh.subscribe(AV_manual_EN_sub);
 }
@@ -70,39 +71,39 @@ void loop()
  
   if (manual_controller == false)
   {
-    drive_duty_cycle = 500;
+    g_drive_duty_cycle = 550;
 
     if (middle_sensor < 40)
     {
-      drive_duty_cycle = -500;
-      // Object in front and to the right => Turn Left
+      g_turn = 500;
+      // Object in front and to the right => g_turnLeft
       if(right_sensor > 150 && middle_sensor < 30)
       {
-        turn = -250; // Turn half left
+        g_turn = -250; // Turn half left
       }
       // Object in front and to the left => Turn Right
       else if(middle_sensor < 30 && left_sensor > 150)
       {
-        turn = 250; // Turn half right
+        g_turn = 250; // Turn half right
       }
       // Object is close to all sensors => Reverse or go backwards
       else if(right_sensor > 150 && middle_sensor < 20 && left_sensor > 150)
       {
-        turn = 0; // Set Turn angle to 0 or face straight
-        drive_duty_cycle = -250; // Set reverse speed to 1/4 of max speed
+        g_turn = 0; // Set Turn angle to 0 or face straight
+        g_drive_duty_cycle = -300; // Set reverse speed to 1/4 of max speed
       }
       // Object very close to right side => Turn Hard Left 
     }
     else if (right_sensor > 100)
     {
-      turn = -490;
+      g_turn = -250;
     }
     else if (left_sensor > 100)
     {
-      turn = 490;
+      g_turn = 250;
     }
-    corner = turn + 780;
-    corner_drive(corner, drive_duty_cycle);
+    g_corner = turn + 780;
+    corner_drive(g_corner, g_drive_duty_cycle);
   }
 
   // publishSpeed(10);
@@ -135,22 +136,20 @@ int sensor1(int delay_sonar)
   return cm_distance;
 }
 
-
 void AV_manual_en_cb(const std_msgs::Bool& AV_vel_manual_msg)
 {
   manual_controller = AV_vel_manual_msg.data;
 }
 
 void AV_vel_cb(const geometry_msgs::Twist& AV_vel_msg)  //callback function from subscribe
-
 {
-  drive_duty_cycle = AV_vel_msg.linear.x;           //val: -2800 <-> 2800
-  turn = AV_vel_msg.angular.z;
-  corner = turn + 780;          //middle: 780
+  g_drive_duty_cycle = AV_vel_msg.linear.x;           //val: -2800 <-> 2800
+  g_turn = AV_vel_msg.angular.z;
+  g_corner = turn + 780;          //middle: 780
 
     if (manual_controller)
     {
-      corner_drive(corner, drive_duty_cycle);
+      corner_drive(corner, g_drive_duty_cycle);
     }
 
 }//end fo AV_vel_cb
