@@ -22,7 +22,7 @@ ROS Noetic control GPS autonomous vehicle using STM32 and Jetson Nano.
 
 ![schematic](https://github.com/Chrisx19/senior_project_AV/assets/107272321/bf76930d-2566-4377-8d29-5cfc3acadb3e)
 
-![image](https://user-images.githubusercontent.com/107272321/230009457-7026a6dd-5a4a-4efe-8010-96198955987c.png)
+![Traces](https://github.com/Chrisx19/senior_project_AV/assets/107272321/b528a5ff-9bfa-4a72-8fe4-4de412bb97f9)
 
 ### Software 
 * **Communication:** 
