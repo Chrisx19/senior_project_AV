@@ -1,7 +1,7 @@
 # CPP Senior Project
 
 ## December 2022 - May 2023
-ROS Noetic control GPS autonomous vehicle using STM32 and Jetson Nano. 
+ROS Noetic control GPS autonomous vehicle using ATMega2560 and Jetson Nano. 
 
 ## Video Demo
 **Autonomous Mode:**        https://youtu.be/Os8QsEWLSAU
