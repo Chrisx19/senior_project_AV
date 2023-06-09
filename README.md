@@ -35,5 +35,5 @@ ROS Noetic control GPS autonomous vehicle using ATMega2560 and Jetson Nano.
 
 ### Software 
 * **Communication:** 
-  In order to have Jetson Nano and STM32 talk to each other bi directionally, we used a customed UART protocol from ROS package called 'Rosserial.' Rosserial protocol was able to give us the ncecesity we need to transfer data from each other while autonomy. With rosserial, STM32 became its own node and Jetson Nano has its main node and sub node. Nodes are basically scripts, which transfer myriad of data types from node to node.
+  In order to have Jetson Nano and ATMega2560 talk to each other bi directionally, we used a customed UART protocol from ROS package called 'Rosserial.' Rosserial protocol was able to give us the ncecesity we need to transfer data from each other while autonomy. With rosserial, STM32 became its own node and Jetson Nano has its main node and sub node. Nodes are basically scripts, which transfer myriad of data types from node to node.
    
