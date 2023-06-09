@@ -1,4 +1,6 @@
 # CPP Senior Project
+![Senior project](https://github.com/Chrisx19/senior_project_AV/assets/107272321/126bbbec-cde1-4739-a1e9-c6436d82b5f8)
+
 
 ## December 2022 - May 2023
 ROS Noetic control GPS autonomous vehicle using ATMega2560 and Jetson Nano. 
