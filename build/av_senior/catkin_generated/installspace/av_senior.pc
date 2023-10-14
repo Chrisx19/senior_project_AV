@@ -1,8 +1,0 @@
-prefix=/home/jetson/senior_ws/install
-
-Name: av_senior
-Description: Description of av_senior
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: rospy std_msgs sensor_msgs geometry_msgs
