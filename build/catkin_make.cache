@@ -1,0 +1,2 @@
+av_senior
+-DCATKIN_DEVEL_PREFIX=/home/jetson/senior_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jetson/senior_ws/install -G Unix Makefiles
