@@ -9,6 +9,7 @@
     <param name="baud" value="$(arg baud)" />
   </node>
 
+<!-- Start xbox joy stick teleop twist joy -->
   <arg name="joy_config" default="ps3" />
   <arg name="joy_dev" default="/dev/input/js0" />
   <arg name="config_filepath" default="$(find teleop_twist_joy)/config/$(arg joy_config).config.yaml" />
@@ -21,6 +22,7 @@
     <remap from="joy" to="$(arg joy_topic)" />
   </node>
 
+<!-- Start python script on controlling arduino -->
   <node name = "av_node" pkg = "av_senior" type = "joy_av.py" />
  
 
