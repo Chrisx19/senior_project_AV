@@ -1,5 +1,5 @@
 [Unit]
-Description=ROS Startup Script
+Description=ROS Automated Script
 
 [Service]
 Type=simple
