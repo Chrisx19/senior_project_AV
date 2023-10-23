@@ -20,30 +20,11 @@ class Vehicle(object):
         self.cmd_pub = rospy.Publisher("/cmd_vel_AV", Twist, queue_size = 10)
         self.speed_pub = rospy.Publisher("/speed_av", Float32, queue_size = 10)
         self.joy_sub = rospy.Subscriber("/joy", Joy, self.joy_cb, queue_size = 10)
-<<<<<<< HEAD
         self.person_sub = rospy.Subscriber("/person", Float32, self.person_cb, queue_size = 10)
         self.manual_pub = rospy.Publisher("/manual_en", Bool, queue_size = 10)
 
     def person_cb(self, percent_msg):
         self.person = percent_msg.data
-=======
-        self.distance_sub = rospy.Subscriber("/distance_ll", Arduino_telemetry, self.distance_cb, queue_size = 100, buff_size= 8192, tcp_nodelay=False)
-
-    def distance_cb(self, distance_msg):
-        right_sensor = distance_msg.Right_Distance
-        mid_sensor = distance_msg.Mid_Distance          #60 
-        left_sensor = distance_msg.Left_Distance
-
-        if mid_sensor <= 60:
-            self.drive = -500
-        else:
-            self.drive = 0
-
-        # self.vel.linear.x = self.drive  # 1000 #forward or back if its negative
-        # self.vel.angular.z = self.corner #  500 right(positive val until 500)    left is vice versa 
-
-        # self.cmd_pub.publish(self.vel)
->>>>>>> dacecd1953e528a00cd5fcd4a8f37f68d6a2c735
         
     def joy_cb(self, joy_msg):
         speed_pulse  = joy_msg.axes[3] * self.quad_pps
@@ -61,7 +42,7 @@ class Vehicle(object):
             self.drive = int(speed_pulse * 2/3)
 
 
-            if (self.person > 55):
+            if (self.person > 60):
                 self.drive = 0
             else:
                 if (manual_enable > 0):
