@@ -1,6 +1,13 @@
 <launch>
-  <node name = "av_node" pkg = "av_senior" type = "joy_av.py" />
-  <node name = "object_detection_node" pkg = "av_senior" type = "object_detect.py" />
+ 
+
+<!-- Start rosserial -->
+  <arg name="port" default="/dev/ttyACM0" />  <!-- Replace with your Arduino's serial port -->
+  <arg name="baud" default="57600" />          <!-- Match with the Arduino sketch's baud rate -->
+  <node pkg="rosserial_python" type="serial_node.py" name="rosserial" output="screen">
+    <param name="port" value="$(arg port)" />
+    <param name="baud" value="$(arg baud)" />
+  </node>
 
   <arg name="joy_config" default="ps3" />
   <arg name="joy_dev" default="/dev/input/js0" />
@@ -14,15 +21,8 @@
     <remap from="joy" to="$(arg joy_topic)" />
   </node>
 
-  <!-- <node pkg="teleop_twist_joy" name="teleop_twist_joy" type="teleop_node">
-    <rosparam command="load" file="$(arg config_filepath)" />
-    <remap from="joy" to="$(arg joy_topic)" />
-  </node> -->
-
-  <!-- <node name="atmega2560_node"        pkg="rosserial_python"      type="serial_node.py" output = "screen">
-    <param name="port"              type="string"               value="/dev/ttyACM0"/>
-    <param name="baud"              type="int"                  value="38400"/>
-  </node> -->
+  <node name = "av_node" pkg = "av_senior" type = "joy_av.py" />
+ 
 
   
 
