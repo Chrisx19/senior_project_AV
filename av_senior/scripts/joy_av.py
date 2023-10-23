@@ -7,7 +7,7 @@ from sensor_msgs.msg import Joy
 
 class Vehicle(object):
     def __init__(self):
-        self.quad_pps = 1800 #max is somewhere 26xx
+        self.quad_pps = 800 #max is somewhere 26xx
         self.max_corner_turn = 500
         self.wheel_diameter = 0.135
     
