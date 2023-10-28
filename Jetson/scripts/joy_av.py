@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rospy
+import subprocess
 from math import pi
 from std_msgs.msg import Float32, Bool
 from geometry_msgs.msg import Twist
@@ -76,6 +77,15 @@ class Vehicle(object):
         meter_per_sec = wheel_circumference * (1 / ppr_motor) * qpps
 
         return meter_per_sec
+    
+    def shutdown(self, joy_msg):
+        # Shutdown the system immediately
+        backButton = joy_msg.buttons[7]
+        startButton = joy_msg.buttons[8]
+
+        if (backButton and startButton ):
+            subprocess.run(["sudo", "shutdown", "-h", "now"])
+
 
 if __name__ == "__main__":
     rospy.init_node("av_node", log_level=rospy.INFO)
