@@ -1,0 +1,14 @@
+[Unit]
+Description=ROS Automated Script
+
+[Service]
+Type=simple
+WorkingDirectory=/home/jetson/
+ExecStart=/bin/bash -c /home/jetson/rover_ws/src/av_senior/avStartup.sh
+User=jetson
+Restart=on-failure
+
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
