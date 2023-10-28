@@ -68,6 +68,7 @@ class Vehicle(object):
             self.cmd_pub.publish(self.vel)
 
         self.speed_pub.publish(speed)
+        self.shutdown(joy_msg)
 
     def qpps_conversion(self, qpps):
         wheel_radius = self.wheel_diameter / 2
@@ -80,8 +81,8 @@ class Vehicle(object):
     
     def shutdown(self, joy_msg):
         # Shutdown the system immediately
-        backButton = joy_msg.buttons[7]
-        startButton = joy_msg.buttons[8]
+        backButton = joy_msg.buttons[10]
+        startButton = joy_msg.buttons[11]
 
         if (backButton and startButton ):
             subprocess.run(["sudo", "shutdown", "-h", "now"])
